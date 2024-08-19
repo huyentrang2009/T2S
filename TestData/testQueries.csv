@@ -1,0 +1,101 @@
+question,query
+How many artists are there?,SELECT COUNT(*) FROM Artist
+What's the average invoice from an American customer whose Fax is missing since 2003 but before 2010?,SELECT AVG(Total) FROM Invoice i JOIN Customer c ON i.CustomerId = c.CustomerId WHERE c.Country = 'USA' AND i.InvoiceDate BETWEEN '2003-01-01' AND '2010-01-01' AND c.Fax IS NULL
+"Provide a query showing Customers who are not in the USA.","SELECT * FROM Customer c WHERE c.Country != 'USA'"
+"Provide a query showing the Invoices of customers who are from Brazil.","SELECT c.firstname, c.lastname, i.invoiceid, i.invoicedate, i.billingcountry FROM Customer as c, Invoice as i WHERE c.country = 'Brazil' and c.customerid = i.customerid"
+Provide a query showing only the Employees who are IT staff,SELECT * FROM Employee WHERE Title = 'IT staff'
+How many employees are there?,SELECT COUNT(*) FROM Employee
+How many tracks are there in the album with ID 5?,SELECT COUNT(*) FROM Track WHERE AlbumId = 5
+List all tracks in the 'Rock' genre.,SELECT t.name FROM Track t WHERE GenreId = (SELECT GenreId FROM Genre WHERE Name = 'Rock')
+Provide a query showing a unique list of billing countries from the Invoice table.,SELECT DISTINCT billingcountry FROM invoice
+How many customer come from Germany?.,"SELECT COUNT(*) FROM Customer c WHERE c.Country = 'Germany'"
+How many Invoices were there in 2009 and 2011? ,"SELECT COUNT(*) AS InvoiceCount FROM Invoice WHERE strftime('%Y', InvoiceDate) IN ('2009','2011')"
+provide a query that counts the number of line items for Invoice ID 37,SELECT COUNT(*) AS numLineItems FROM InvoiceLine IL WHERE IL.InvoiceId = 37
+Write a SQL query to sort the rows from the table Track in alphabetical order of Track name and display the first 10 rows.,SELECT * FROM Track ORDER BY Name ASC LIMIT 10
+"Write a SQL query to show the top 10 albums with the highest number of tracks. The result should contain 2 columns: album ID and number of tracks in the album.","SELECT a.AlbumId, COUNT(t.TrackID) as Tracks FROM Album a JOIN Track t ON a.AlbumID=t.AlbumID GROUP BY a.AlbumId ORDER BY Tracks desc LIMIT 10"
+"Show a list of the top 10 customer with the highest total spend in 2012.","SELECT c.FirstName, c.LastName, SUM(i.Total) AS TotalSpend FROM Customer c JOIN Invoice i ON c.CustomerId = i.CustomerId WHERE strftime('%Y', i.InvoiceDate) = '2012' GROUP BY c.FirstName, c.LastName ORDER BY TotalSpend DESC LIMIT 10"
+Which artist has earned the most?,"SELECT Artist.Name, SUM(Track.UnitPrice * InvoiceLine.Quantity) AS TotalEarnings FROM Artist JOIN Album ON Artist.ArtistId = Album.ArtistId JOIN Track ON Album.AlbumId = Track.AlbumId JOIN InvoiceLine ON Track.TrackId = InvoiceLine.TrackId JOIN Invoice ON InvoiceLine.InvoiceId = Invoice.InvoiceId GROUP BY Artist.Name ORDER BY TotalEarnings DESC LIMIT 1"
+How many users per country?,"SELECT c.country, COUNT(c.customerid) FROM customer c GROUP BY 1 ORDER BY 1"
+Retrieve the top 5 most expensive tracks,"SELECT t.Name, t.UnitPrice FROM Track t ORDER BY t.UnitPrice DESC LIMIT 5"
+Provide a query showing only the Employees who are Sales Support Agents,SELECT * FROM Employee WHERE Title = 'Sales Support Agent'
+Find the average unit price of tracks in each genre,"SELECT Genre.Name, AVG(Track.UnitPrice) AS AveragePrice FROM Genre JOIN Track ON Genre.GenreId = Track.GenreId GROUP BY Genre.Name"
+Find the total sales amount for each customer.,"SELECT Customer.FirstName, Customer.LastName, SUM(Invoice.Total) AS TotalSpent FROM Customer JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId GROUP BY Customer.FirstName, Customer.LastName ORDER BY TotalSpent DESC;"
+Retrieve the names and total duration of playlists with more than 50 tracks.,"SELECT Playlist.Name, SUM(Track.Milliseconds) AS TotalDuration FROM Playlist JOIN PlaylistTrack ON Playlist.PlaylistId = PlaylistTrack.PlaylistId JOIN Track ON PlaylistTrack.TrackId = Track.TrackId GROUP BY Playlist.Name HAVING COUNT(PlaylistTrack.TrackId) > 50"
+Get the names and hire dates of employees hired after 2005.,"SELECT FirstName, LastName, HireDate FROM Employee WHERE STRFTIME('%Y', HireDate) > '2002'"
+Find the number of tracks that belong to each media type,"SELECT MediaType.Name, COUNT(Track.TrackId) AS NumberOfTracks FROM MediaType JOIN Track ON MediaType.MediaTypeId = Track.MediaTypeId GROUP BY MediaType.Name"
+Find the most common billing country,"SELECT BillingCountry, COUNT(*) AS NumberOfInvoices FROM Invoice GROUP BY BillingCountry ORDER BY NumberOfInvoices DESC LIMIT 1"
+List all tracks that are over 5 minutes long,SELECT Name FROM Track WHERE Milliseconds > 300000
+Find the names of employees who work in the 'Sales Support Agent' department ,"SELECT FirstName, LastName FROM Employee WHERE Title = 'Sales Support Agent'"
+Get the names of all customers from Brazil,"SELECT FirstName, LastName FROM Customer WHERE Country = 'Brazil'"
+List all invoices from the month of June 2013,"SELECT * FROM Invoice WHERE strftime('%Y-%m', InvoiceDate) = '2013-06'"
+Retrieve the names of all playlists that contain more than 10 tracks,SELECT Playlist.Name FROM Playlist JOIN PlaylistTrack ON Playlist.PlaylistId = PlaylistTrack.PlaylistId GROUP BY Playlist.Name HAVING COUNT(PlaylistTrack.TrackId) > 10
+Find the average length of tracks in the 'Classical' genre,SELECT AVG(Milliseconds) FROM Track JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Classical'
+Get the names of all customers along with the city they live in,"SELECT FirstName, LastName, City FROM Customer"
+List the titles of all albums by the artist 'Led Zeppelin',SELECT Album.Title FROM Album JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Led Zeppelin'
+Find the names and emails of customers who have purchased more than 5 tracks,"SELECT Customer.FirstName, Customer.LastName, Customer.Email FROM Customer JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId JOIN InvoiceLine ON Invoice.InvoiceId = InvoiceLine.InvoiceId GROUP BY Customer.CustomerId HAVING COUNT(InvoiceLine.InvoiceLineId) > 5;"
+Get the names of all tracks that have 'Love' in the title,SELECT Name FROM Track WHERE Name LIKE '%Love%'
+List the names of artists who have 'The' in their name,SELECT Name FROM Artist WHERE Name LIKE '%The%'
+Find the names and phone numbers of employees who are managers,"SELECT LastName, FirstName, Phone FROM Employee WHERE ReportsTo IS NULL"
+Get the names of all customers who have not made any purchases in the last year,"SELECT FirstName, LastName FROM Customer WHERE CustomerId NOT IN (SELECT CustomerId FROM Invoice WHERE InvoiceDate >= date('now', '-1 year'));"
+List the names of tracks that are exactly 3 minutes long,SELECT Name FROM Track WHERE Milliseconds = '181000'
+Retrieve the names of playlists that contain the track 'Smells Like Teen Spirit',SELECT Playlist.Name FROM Playlist JOIN PlaylistTrack ON Playlist.PlaylistId = PlaylistTrack.PlaylistId JOIN Track ON PlaylistTrack.TrackId = Track.TrackId WHERE Track.Name = 'Smells Like Teen Spirit'
+Find the names and emails of customers who live in 'California',"SELECT FirstName, LastName, Email FROM Customer WHERE State = 'California'"
+Get the names of albums released by 'The Beatles',SELECT Album.Title FROM Album JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'The Beatles'
+List the names of employees who were hired in the year 2004,"SELECT FirstName, LastName FROM Employee WHERE strftime('%Y', HireDate) = '2004'"
+Find the total number of tracks in each playlist,"SELECT Playlist.Name, COUNT(PlaylistTrack.TrackId) AS NumberOfTracks FROM Playlist JOIN PlaylistTrack ON Playlist.PlaylistId = PlaylistTrack.PlaylistId GROUP BY Playlist.Name"
+Get the names of tracks that are part of the 'Jazz' genre,SELECT Track.Name FROM Track JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Jazz'
+List the names of customers who have made more than 3 purchases,"SELECT Customer.FirstName, Customer.LastName FROM Customer JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId GROUP BY Customer.CustomerId HAVING COUNT(Invoice.InvoiceId) > 3"
+Retrieve the names of employees who were born in the 1970s,"SELECT FirstName, LastName FROM Employee WHERE strftime('%Y', BirthDate) BETWEEN '1970' AND '1979'"
+Find the titles of albums that contain more than 15 tracks,SELECT Album.Title FROM Album JOIN Track ON Album.AlbumId = Track.AlbumId GROUP BY Album.Title HAVING COUNT(Track.TrackId) > 15
+Get the names of all customers who have an email address ending in '.net',"SELECT FirstName, LastName FROM Customer WHERE Email LIKE '%.net'"
+List the names of customers who have never made a purchase,"SELECT c.FirstName, c.LastName FROM Customer c LEFT JOIN Invoice i ON c.CustomerId = i.CustomerId WHERE i.InvoiceId IS NULL"
+Get the names of tracks that have a duration shorter than 2 minutes,SELECT Name FROM Track WHERE Milliseconds < 120000
+List the names of customers who have a first name starting with 'J',"SELECT FirstName, LastName FROM Customer WHERE FirstName LIKE 'J%'"
+Retrieve the names of employees who do not have a phone number listed,"SELECT FirstName, LastName FROM Employee WHERE Phone IS NULL"
+Find the names of tracks that were not purchased by any customer,SELECT T2.Name FROM TRACK AS T2 LEFT JOIN INVOICELINE AS T1 ON T2.TrackId = T1.TrackId WHERE T1.TrackId IS NULL
+Get the names and emails of customers who have made purchases totaling more than $13,"SELECT c.FirstName, c.Email FROM Customer c JOIN Invoice inv ON c.CustomerId = inv.CustomerId WHERE inv.Total > 13"
+List the names of albums released by artists whose name starts with 'B',SELECT Album.Title FROM Album JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name LIKE 'B%'
+Find the total number of invoices in each billing state,"SELECT BillingState, COUNT(*) AS NumberOfInvoices FROM Invoice GROUP BY BillingState"
+Get the names of customers who have an address containing the word 'Street',"SELECT FirstName, LastName FROM Customer WHERE Address LIKE '%Street%'"
+"List the names of tracks that have the composer is ""AC/DC""",SELECT Name FROM Track WHERE Composer = 'AC/DC'
+Find the names of customers who have purchased tracks from the 'Rock' genre,"SELECT DISTINCT Customer.FirstName, Customer.LastName FROM Customer JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId JOIN InvoiceLine ON Invoice.InvoiceId = InvoiceLine.InvoiceId JOIN Track ON InvoiceLine.TrackId = Track.TrackId JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Rock'"
+Get the names of employees who were hired before the year 2000,"SELECT FirstName, LastName FROM Employee WHERE HireDate < '2000-01-01'"
+List the names of tracks that have the word 'Blue' in the title,SELECT Name FROM Track WHERE Name LIKE '%Blue%'
+Retrieve the names of albums released by artists who have released more than 3 albums,SELECT Album.Title FROM Album JOIN Artist ON Album.ArtistId = Artist.ArtistId GROUP BY Artist.Name HAVING COUNT(Album.AlbumId) > 3
+Find the total number of tracks in each genre,"SELECT Genre.Name, COUNT(Track.TrackId) AS NumberOfTracks FROM Genre JOIN Track ON Genre.GenreId = Track.GenreId GROUP BY Genre.Name"
+List the names of tracks that don't have the compose,SELECT Name FROM Track WHERE Composer IS NULL
+Get the names of customers who made purchases in January 2012,"SELECT DISTINCT c.FirstName, c.LastName FROM Customer c JOIN Invoice i ON c.CustomerId = i.CustomerId WHERE DATE_PART('month', i.InvoiceDate) = 1 AND DATE_PART('year', i.InvoiceDate) = 2012"
+List the names of employees who were born in the month of January,"SELECT FirstName, LastName FROM Employee WHERE strftime('%m', BirthDate) = '01'"
+Retrieve the names of tracks that have been purchased more than 3 times,SELECT Track.Name FROM Track JOIN InvoiceLine ON Track.TrackId = InvoiceLine.TrackId GROUP BY Track.Name HAVING COUNT(InvoiceLine.InvoiceLineId) > 3
+Find the names of playlists that contain tracks from the 'Pop' genre,SELECT Playlist.Name FROM Playlist JOIN PlaylistTrack ON Playlist.PlaylistId = PlaylistTrack.PlaylistId JOIN Track ON PlaylistTrack.TrackId = Track.TrackId JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Pop'
+Get the names and phone numbers of customers who live in 'New York',"SELECT FirstName, LastName, Phone FROM Customer WHERE City = 'New York'"
+List the titles of albums that contain a track with 'live' in the title,SELECT DISTINCT Album.Title FROM Album JOIN Track ON Album.AlbumId = Track.AlbumId WHERE Track.Name LIKE '%live%'
+Find the names of customers who don't have fax number,"SELECT FirstName, LastName FROM Customer WHERE Fax IS NULL"
+Retrieve the names of customers who have a postal code starting with '98',"SELECT FirstName, LastName FROM Customer WHERE PostalCode LIKE '98%'"
+Get the names of tracks that have a genre of 'Metal',SELECT Track.Name FROM Track JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Metal'
+List the names of customers who don't work in a company,"SELECT FirstName, LastName FROM Customer WHERE Company IS NULL"
+Find the names of customers who have purchased tracks from the 'Blues' genre,"SELECT DISTINCT Customer.FirstName, Customer.LastName FROM Customer JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId JOIN InvoiceLine ON Invoice.InvoiceId = InvoiceLine.InvoiceId JOIN Track ON InvoiceLine.TrackId = Track.TrackId JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Blues'"
+which artist has earned the most according to the InvoiceLines?,"SELECT t.Name, SUM(il.UnitPrice * il.Quantity) AS TotalEarnings FROM Track t INNER JOIN PlaylistTrack pt ON t.TrackId = pt.TrackId INNER JOIN InvoiceLine il ON pt.TrackId = il.TrackId GROUP BY t.Name ORDER BY TotalEarnings DESC LIMIT 1"
+Get the names of employees who were hired in the month of October?,"SELECT FirstName, LastName FROM Employee WHERE strftime('%m', HireDate) = '10'"
+List the names of tracks that have been purchased by customers from 'Canada',SELECT DISTINCT Track.Name FROM Track JOIN InvoiceLine ON Track.TrackId = InvoiceLine.TrackId JOIN Invoice ON InvoiceLine.InvoiceId = Invoice.InvoiceId JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Canada'
+Find the names and emails of customers who have a first name starting with 'A',"SELECT FirstName, LastName, Email FROM Customer WHERE FirstName LIKE 'A%'"
+Retrieve the names of albums that have tracks shorter than 2 minutes,SELECT DISTINCT Album.Title FROM Album JOIN Track ON Album.AlbumId = Track.AlbumId WHERE Track.Milliseconds < 120000
+List the names of employees who were born in the month of March,"SELECT FirstName, LastName FROM Employee WHERE strftime('%m', BirthDate) = '03'"
+Retrieve the names of tracks that have been purchased by more than 3 different customers,SELECT Track.Name FROM Track JOIN InvoiceLine ON Track.TrackId = InvoiceLine.TrackId JOIN Invoice ON InvoiceLine.InvoiceId = Invoice.InvoiceId GROUP BY Track.Name HAVING COUNT(DISTINCT Invoice.CustomerId) > 3
+Find the names of playlists that contain tracks from the 'Reggae' genre,SELECT Playlist.Name FROM Playlist JOIN PlaylistTrack ON Playlist.PlaylistId = PlaylistTrack.PlaylistId JOIN Track ON PlaylistTrack.TrackId = Track.TrackId JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Reggae'
+Get the names and phone numbers of customers who live in 'London',"SELECT FirstName, LastName, Phone FROM Customer WHERE City = 'London'"
+List the titles of albums that contain a track with 'remix' in the title,SELECT DISTINCT Album.Title FROM Album JOIN Track ON Album.AlbumId = Track.AlbumId WHERE Track.Name LIKE '%remix%'
+Retrieve the names of customers who have a postal code starting with '75',"SELECT FirstName, LastName FROM Customer WHERE PostalCode LIKE '75%'"
+Get the names of tracks that have a genre of 'Hip Hop/Rap',SELECT Track.Name FROM Track JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Hip Hop/Rap'
+Find the names of customers who have purchased tracks from the 'Drama' genre,"SELECT DISTINCT Customer.FirstName, Customer.LastName FROM Customer JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId JOIN InvoiceLine ON Invoice.InvoiceId = InvoiceLine.InvoiceId JOIN Track ON InvoiceLine.TrackId = Track.TrackId JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Drama'"
+"Write a SQL query to display each invoice amount as the fraction of the total sales from the billing city. Show the InvoiceId, billing city name, invoice total as a fraction of city total","SELECT i.InvoiceId, b.BillingCity, i.Total / (SELECT SUM(i2.Total) FROM Invoice i2 WHERE i2.BillingCity = b.BillingCity) AS invoice_fraction FROM Invoice i JOIN Customer c ON i.CustomerId = c.CustomerId JOIN (SELECT CustomerId, City AS BillingCity FROM Customer) b ON c.CustomerId = b.CustomerId"
+Write a SQL query to calculate the average payment made by each customer,"SELECT c.CustomerId, AVG(i.Total) AS AveragePayment FROM Customer c JOIN Invoice i ON c.CustomerId = i.CustomerId GROUP BY c.CustomerId"
+"Write a SQL query to give the tracks in every album sequential track numbers. The output should display albumid, trackname, trackid, tracknumber.","SELECT albumId, name, trackId, ROW_NUMBER() OVER (PARTITION BY albumId  ORDER BY trackId) AS TrackNumber FROM track"
+"Write a SQL query to list employees hired after the year 2001 & before the year 2003 with their full names, employeeId & the date of hiring.","SELECT EmployeeId, firstName, lastName, HireDate FROM Employee WHERE strftime('%Y',HireDate) = '2002'"
+Write a SQL query to display Albums from the genres 'Rock' and 'Jazz' containing more than 10 tracks,"SELECT a.Title FROM Album a JOIN Track t ON a.AlbumId=t.AlbumId JOIN Genre g ON t.GenreId = g.GenreId WHERE g.Name IN ('Rock', 'Jazz') GROUP BY a.Title HAVING COUNT(t.TrackId) > 10"
+Write a SQL query to calculate the monthly sales and percent change in sales for each month,"SELECT strftime('%Y-%m', InvoiceDate) AS SalesMonth, SUM(Total) AS MonthlySales FROM Invoice GROUP BY SalesMonth ORDER BY SalesMonth"
+Write a SQL query to calculate the average payment made by each customer,"SELECT c.FirstName, c.LastName, CAST(AVG(i.Total) AS REAL) AS AveragePayment FROM Customer c JOIN Invoice i ON c.CustomerId = i.CustomerId GROUP BY c.FirstName, c.LastName"
+Who is writing the rock music?,SELECT DISTINCT t.Composer FROM Track t JOIN Genre g ON t.GenreId = g.GenreId WHERE g.Name = 'Rock'
+List the total sales per country. Which country's customers spent the most?,"SELECT c.Country, SUM(i.Total) AS TotalSales FROM Invoice i JOIN Customer c ON i.CustomerId = c.CustomerId GROUP BY c.Country ORDER BY TotalSales DESC LIMIT 10"
+How many tracks heve the price is '0.99'?, SELECT COUNT(*) FROM Track WHERE UnitPrice = '0.99'
+How many tracks whose composer is 'Audioslave/Chris Cornell'?, SELECT COUNT(*) FROM Track WHERE Composer = 'Audioslave/Chris Cornell'
