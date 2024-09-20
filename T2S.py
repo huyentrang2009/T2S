@@ -138,7 +138,7 @@ def update_base_prompt(file_paths, base_prompt_path='prompts/bp.txt'):
 
 def handle_question(user_question, model, max_num_reflections, files):
     
-    client = Groq(api_key='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')
+    client = Groq(api_key='your_Groq_API_key')
     
     conn = duckdb.connect(database=':memory:', read_only=False)
     #print("Files received:", files)  # Debug: print files received
